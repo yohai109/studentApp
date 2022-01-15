@@ -9,26 +9,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.TextView;
 
-import com.example.studentapp.model.Model;
-import com.example.studentapp.model.Student;
 import com.example.studentapp.viewmodels.StudentListViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.logging.Logger;
 
 public class StudentListRvFragment extends Fragment {
 
-    List<Student> data = Collections.emptyList();
+    //    List<Student> data = Collections.emptyList();
     private StudentListViewModel viewModel;
     private RecyclerView list;
     private MyAdapter adapter;
@@ -47,11 +39,9 @@ public class StudentListRvFragment extends Fragment {
 
         viewModel.getAll().observe(getViewLifecycleOwner(), students -> {
             if (students != null) {
-                data = students;
-                Logger.getGlobal().info("yohai - live data jumped");
-                adapter.notifyDataSetChanged();
+                adapter.setData(students);
             } else {
-                data = Collections.emptyList();
+                adapter.setData(Collections.emptyList());
             }
         });
 
@@ -70,92 +60,17 @@ public class StudentListRvFragment extends Fragment {
         list.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new MyAdapter();
         list.setAdapter(adapter);
-        adapter.setOnItemClickListener((v, position) -> Navigation.findNavController(v)
+        adapter.setOnItemClickListener((student) -> Navigation.findNavController(view)
                 .navigate(
                         StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(
-                                data.get(position).getId()
+                                student.getId()
                         )
                 ));
+
         adapter.setCheckboxSelectedListener((student, isFlag) -> {
             viewModel.updateFlag(student, isFlag);
         });
     }
 
 
-    interface OnItemClickListener {
-        void onItemClick(View v, int position);
-    }
-
-    interface onCheckboxSelectedListener {
-        void onCheckboxSelected(Student student, Boolean isFlag);
-    }
-
-    class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-
-        OnItemClickListener listener;
-        onCheckboxSelectedListener cbListener;
-
-        public void setOnItemClickListener(OnItemClickListener listener) {
-            this.listener = listener;
-        }
-
-        public void setCheckboxSelectedListener(onCheckboxSelectedListener cbListener) {
-            this.cbListener = cbListener;
-        }
-
-        @NonNull
-        @Override
-
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.student_list_row, parent, false);
-            return new MyViewHolder(view, listener, cbListener);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            //here we give the view the student data to show
-
-            Student student = data.get(position);
-            holder.bind(student);
-        }
-
-
-        @Override
-        public int getItemCount() {
-            return data.size();
-        }
-    }
-
-    class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTv;
-        TextView idTv;
-        CheckBox cb;
-        Student student;
-
-        public MyViewHolder(@NonNull View itemView,
-                            OnItemClickListener listener,
-                            onCheckboxSelectedListener cbListener) {
-            super(itemView);
-            nameTv = itemView.findViewById(R.id.listRow_name_tv);
-            idTv = itemView.findViewById(R.id.listRow_id_tv);
-            cb = itemView.findViewById(R.id.listRow_cb);
-            itemView.setOnClickListener(view -> {
-                int pos = getAdapterPosition();
-                listener.onItemClick(view, pos);
-            });
-
-            cb.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked != student.isFlag()) {
-                    cbListener.onCheckboxSelected(student, isChecked);
-                }
-            });
-        }
-
-        public void bind(Student student) {
-            this.student = student;
-            nameTv.setText(student.getName());
-            idTv.setText(student.getId());
-            cb.setChecked(student.isFlag());
-        }
-    }
 }
