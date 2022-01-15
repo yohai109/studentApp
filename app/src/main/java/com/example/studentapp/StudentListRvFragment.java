@@ -22,12 +22,16 @@ import com.example.studentapp.model.Student;
 import com.example.studentapp.viewmodels.StudentListViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class StudentListRvFragment extends Fragment {
 
     List<Student> data;
     private StudentListViewModel viewModel;
+    private RecyclerView list;
+    private MyAdapter adapter;
 
 
     @Nullable
@@ -35,7 +39,6 @@ public class StudentListRvFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_student_list, container, false);
-//        data = Model.instance.getAllStudents();
 
         viewModel = new ViewModelProvider(
                 this,
@@ -45,26 +48,32 @@ public class StudentListRvFragment extends Fragment {
         viewModel.getAll().observe(getViewLifecycleOwner(), students -> {
             if (students != null) {
                 data = students;
+                Logger.getGlobal().info("yohai - live data jumped");
+                adapter.notifyDataSetChanged();
+            } else {
+                data = Collections.emptyList();
             }
         });
 
-        RecyclerView list = view.findViewById(R.id.studentListRv_rv);
-        list.setHasFixedSize(true);
 
-        list.setLayoutManager(new LinearLayoutManager(getContext()));
-        MyAdapter adapter = new MyAdapter();
-        list.setAdapter(adapter);
-        adapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                int studentIndex = position;
-                Navigation.findNavController(v).navigate(StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(studentIndex));
-            }
-        });
+        initList(view);
 
         FloatingActionButton addBtn = view.findViewById(R.id.Rv_addBtn_fab);
         addBtn.setOnClickListener(Navigation.createNavigateOnClickListener(StudentListRvFragmentDirections.actionStudentListRvFragmentToNewStudentFragment()));
         return view;
+    }
+
+    private void initList(View view) {
+        list = view.findViewById(R.id.studentListRv_rv);
+        list.setHasFixedSize(true);
+
+        list.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new MyAdapter();
+        list.setAdapter(adapter);
+        adapter.setOnItemClickListener((v, position) -> Navigation.findNavController(v)
+                .navigate(
+                        StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(position)
+                ));
     }
 
 

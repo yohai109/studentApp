@@ -3,6 +3,7 @@ package com.example.studentapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import android.os.Bundle;
@@ -15,8 +16,12 @@ import android.widget.EditText;
 
 import com.example.studentapp.model.Model;
 import com.example.studentapp.model.Student;
+import com.example.studentapp.viewmodels.AddStudentViewModel;
+import com.example.studentapp.viewmodels.StudentListViewModel;
 
 public class NewStudentFragment extends Fragment {
+
+    private AddStudentViewModel viewModel;
 
     @Nullable
     @Override
@@ -31,14 +36,16 @@ public class NewStudentFragment extends Fragment {
 
         Button saveBtn = view.findViewById(R.id.newstudent_save_btn);
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Student student = new Student(name.getText().toString(), id.getText().toString(), address.getText().toString(),
-                        phone.getText().toString(), cb.isChecked());
-                Model.instance.addStudent(student);
-                Navigation.findNavController(v).navigateUp();
-            }
+        viewModel = new ViewModelProvider(
+                this,
+                ((StudentApplication) getActivity().getApplication()).getFactory()
+        ).get(AddStudentViewModel.class);
+
+        saveBtn.setOnClickListener(v -> {
+            Student student = new Student(name.getText().toString(), id.getText().toString(), address.getText().toString(),
+                    phone.getText().toString(), cb.isChecked());
+            viewModel.insert(student);
+            Navigation.findNavController(v).navigateUp();
         });
 
         Button cancelBtn = view.findViewById(R.id.newstudent_cancel_btn);
@@ -46,7 +53,6 @@ public class NewStudentFragment extends Fragment {
 
         return view;
     }
-
 
 
 }
