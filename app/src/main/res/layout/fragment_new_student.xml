@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewStudentFragment">
+
+    <ImageView
+        android:id="@+id/newstudent_avatar_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/sample"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:labelFor="@id/newstudent_name_et"
+        android:text="@string/student_name_label"
+        app:layout_constraintStart_toStartOf="@id/newstudent_avatar_iv"
+        app:layout_constraintTop_toBottomOf="@id/newstudent_avatar_iv" />
+
+    <EditText
+        android:id="@+id/newstudent_name_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:inputType="text"
+        app:layout_constraintBaseline_toBaselineOf="@id/name_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/name_label" />
+
+    <TextView
+        android:id="@+id/id_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:labelFor="@id/newstudent_id_et"
+        android:text="@string/student_id_label"
+        app:layout_constraintStart_toStartOf="@id/name_label"
+        app:layout_constraintTop_toBottomOf="@id/name_label" />
+
+    <EditText
+        android:id="@+id/newstudent_id_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:inputType="text"
+        app:layout_constraintBaseline_toBaselineOf="@id/id_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/id_label" />
+
+    <TextView
+        android:id="@+id/phone_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:labelFor="@id/newstudent_phone_et"
+        android:text="@string/student_phone_label"
+        app:layout_constraintStart_toStartOf="@id/id_label"
+        app:layout_constraintTop_toBottomOf="@id/id_label" />
+
+    <EditText
+        android:id="@+id/newstudent_phone_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:inputType="phone"
+        app:layout_constraintBaseline_toBaselineOf="@id/phone_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/phone_label" />
+
+    <TextView
+        android:id="@+id/address_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:labelFor="@id/newstudent_address_et"
+        android:text="@string/student_address_label"
+        app:layout_constraintStart_toStartOf="@id/phone_label"
+        app:layout_constraintTop_toBottomOf="@id/phone_label" />
+
+    <EditText
+        android:id="@+id/newstudent_address_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:inputType="text"
+        app:layout_constraintBaseline_toBaselineOf="@id/address_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/address_label" />
+
+    <TextView
+        android:id="@+id/chaecked_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:labelFor="@id/newstudent_address_et"
+        android:text="@string/student_checked_label"
+        app:layout_constraintStart_toStartOf="@id/address_label"
+        app:layout_constraintTop_toBottomOf="@id/address_label" />
+
+    <CheckBox
+        android:id="@+id/newstudent_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@id/chaecked_label"
+        app:layout_constraintStart_toEndOf="@id/chaecked_label" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/newstudent_cancel_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:text="@android:string/cancel"/>
+
+        <Button
+            android:id="@+id/newstudent_save_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:text="@string/save_btn_text"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

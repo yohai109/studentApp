@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">StudentApp</string>
+    <string name="fab_description">fab</string>
+    <string name="profile_picture_description">profile picture</string>
+    <string name="student_name_label">name:</string>
+    <string name="student_id_label">id:</string>
+    <string name="student_phone_label">phone:</string>
+    <string name="student_address_label">address:</string>
+    <string name="student_checked_label">checked:</string>
+    <string name="save_btn_text">save</string>
+    <string name="delete_btn_text">delete</string>
+    <string name="edit_btn_text">edit</string>
+</resources>
