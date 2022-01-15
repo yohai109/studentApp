@@ -76,6 +76,9 @@ public class StudentListRvFragment extends Fragment {
                                 data.get(position).getId()
                         )
                 ));
+        adapter.setCheckboxSelectedListener((student, isFlag) -> {
+            viewModel.updateFlag(student, isFlag);
+        });
     }
 
 
@@ -83,12 +86,21 @@ public class StudentListRvFragment extends Fragment {
         void onItemClick(View v, int position);
     }
 
+    interface onCheckboxSelectedListener {
+        void onCheckboxSelected(Student student, Boolean isFlag);
+    }
+
     class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
         OnItemClickListener listener;
+        onCheckboxSelectedListener cbListener;
 
         public void setOnItemClickListener(OnItemClickListener listener) {
             this.listener = listener;
+        }
+
+        public void setCheckboxSelectedListener(onCheckboxSelectedListener cbListener) {
+            this.cbListener = cbListener;
         }
 
         @NonNull
@@ -96,7 +108,7 @@ public class StudentListRvFragment extends Fragment {
 
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = getLayoutInflater().inflate(R.layout.student_list_row, parent, false);
-            return new MyViewHolder(view, listener);
+            return new MyViewHolder(view, listener, cbListener);
         }
 
         @Override
@@ -104,12 +116,7 @@ public class StudentListRvFragment extends Fragment {
             //here we give the view the student data to show
 
             Student student = data.get(position);
-            holder.nameTv.setText(student.getName());
-            holder.idTv.setText(student.getId());
-            holder.cb.setOnCheckedChangeListener(null); // reset the checkbox
-            holder.cb.setChecked(student.isFlag());
-
-            holder.cb.setOnCheckedChangeListener((buttonView, isChecked) -> student.setFlag(isChecked));
+            holder.bind(student);
         }
 
 
@@ -123,8 +130,11 @@ public class StudentListRvFragment extends Fragment {
         TextView nameTv;
         TextView idTv;
         CheckBox cb;
+        Student student;
 
-        public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
+        public MyViewHolder(@NonNull View itemView,
+                            OnItemClickListener listener,
+                            onCheckboxSelectedListener cbListener) {
             super(itemView);
             nameTv = itemView.findViewById(R.id.listRow_name_tv);
             idTv = itemView.findViewById(R.id.listRow_id_tv);
@@ -133,7 +143,19 @@ public class StudentListRvFragment extends Fragment {
                 int pos = getAdapterPosition();
                 listener.onItemClick(view, pos);
             });
+
+            cb.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked != student.isFlag()) {
+                    cbListener.onCheckboxSelected(student, isChecked);
+                }
+            });
         }
 
+        public void bind(Student student) {
+            this.student = student;
+            nameTv.setText(student.getName());
+            idTv.setText(student.getId());
+            cb.setChecked(student.isFlag());
+        }
     }
 }
