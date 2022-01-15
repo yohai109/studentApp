@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 public class StudentListRvFragment extends Fragment {
 
-    List<Student> data;
+    List<Student> data = Collections.emptyList();
     private StudentListViewModel viewModel;
     private RecyclerView list;
     private MyAdapter adapter;
@@ -72,7 +72,9 @@ public class StudentListRvFragment extends Fragment {
         list.setAdapter(adapter);
         adapter.setOnItemClickListener((v, position) -> Navigation.findNavController(v)
                 .navigate(
-                        StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(position)
+                        StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(
+                                data.get(position).getId()
+                        )
                 ));
     }
 
@@ -107,12 +109,7 @@ public class StudentListRvFragment extends Fragment {
             holder.cb.setOnCheckedChangeListener(null); // reset the checkbox
             holder.cb.setChecked(student.isFlag());
 
-            holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    student.setFlag(isChecked);
-                }
-            });
+            holder.cb.setOnCheckedChangeListener((buttonView, isChecked) -> student.setFlag(isChecked));
         }
 
 

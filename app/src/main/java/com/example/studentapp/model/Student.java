@@ -25,6 +25,10 @@ public class Student {
     public Student() {
     }
 
+    public Student(@NonNull String id) {
+        this.id = id;
+    }
+
     public String getAddress() {
         return address;
     }

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import android.content.Intent;
@@ -18,12 +19,21 @@ import android.widget.EditText;
 
 import com.example.studentapp.model.Model;
 import com.example.studentapp.model.Student;
+import com.example.studentapp.viewmodels.EditStudentViewModel;
+import com.example.studentapp.viewmodels.StudentDetailsViewModel;
 
 import java.util.List;
 
 public class StudentEditFragment extends Fragment {
 
-    List<Student> data;
+    private EditStudentViewModel viewModel;
+    private EditText name;
+    private EditText id;
+    private EditText address;
+    private EditText phone;
+    private CheckBox cb;
+
+    private Student editedStudent;
 
     @Nullable
     @Override
@@ -31,46 +41,61 @@ public class StudentEditFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_student_edit, container, false);
 
-        data = Model.instance.getAllStudents();
 
-        int index = StudentEditFragmentArgs.fromBundle(getArguments()).getStudentIndex();
-        Student student = data.get(index);
+        viewModel = new ViewModelProvider(
+                this,
+                ((StudentApplication) getActivity().getApplication()).getFactory()
+        ).get(EditStudentViewModel.class);
 
-        EditText name = view.findViewById(R.id.studentedit_name);
-        EditText id = view.findViewById(R.id.studentedit_id);
-        EditText address = view.findViewById(R.id.studentedit_addres);
-        EditText phone = view.findViewById(R.id.studentedit_phone);
-        CheckBox cb = view.findViewById(R.id.studentedit_cb);
+        name = view.findViewById(R.id.studentedit_name);
+        id = view.findViewById(R.id.studentedit_id);
+        address = view.findViewById(R.id.studentedit_addres);
+        phone = view.findViewById(R.id.studentedit_phone);
+        cb = view.findViewById(R.id.studentedit_cb);
+
+        @NonNull String index = StudentEditFragmentArgs.fromBundle(getArguments()).getStudentIndex();
+        viewModel.getStudent(index).observe(getViewLifecycleOwner(), student -> {
+            name.setText(student.getName());
+            id.setText(student.getId());
+            address.setText(student.getAddress());
+            phone.setText(student.getPhone());
+            cb.setChecked(student.isFlag());
+
+            editedStudent = student;
+        });
+
+
         Button saveBtn = view.findViewById(R.id.studentedit_save);
         Button cancelBtn = view.findViewById(R.id.studentedit_cancel);
         Button deleteBtn = view.findViewById(R.id.studentedit_delete);
 
-        name.setText(student.getName());
-        id.setText(student.getId());
-        address.setText(student.getAddress());
-        phone.setText(student.getPhone());
-        cb.setChecked(student.isFlag());
-
         cancelBtn.setOnClickListener(v -> Navigation.findNavController(v).navigate(StudentEditFragmentDirections.actionGlobalStudentListRvFragment()));
 
-
         saveBtn.setOnClickListener(v -> {
+            String oldId = editedStudent.getId();
             //update the student
-            student.setName(name.getText().toString());
-            student.setId(id.getText().toString());
-            student.setAddress(address.getText().toString());
-            student.setPhone(phone.getText().toString());
-            student.setFlag(cb.isChecked());
+            editedStudent.setName(name.getText().toString());
+            editedStudent.setId(id.getText().toString());
+            editedStudent.setAddress(address.getText().toString());
+            editedStudent.setPhone(phone.getText().toString());
+            editedStudent.setFlag(cb.isChecked());
 
-            data.remove(index);
-            data.add(index, student);
+            viewModel.update(
+                    oldId,
+                    editedStudent.getId(),
+                    editedStudent.getName(),
+                    editedStudent.getAddress(),
+                    editedStudent.getPhone(),
+                    editedStudent.isFlag()
+            );
             Navigation.findNavController(v).navigate(StudentEditFragmentDirections.actionGlobalStudentListRvFragment());
         });
 
         deleteBtn.setOnClickListener(v -> {
-            data.remove(index);
+            viewModel.delete(editedStudent);
             Navigation.findNavController(v).navigate(StudentEditFragmentDirections.actionGlobalStudentListRvFragment());
         });
+
         return view;
     }
 

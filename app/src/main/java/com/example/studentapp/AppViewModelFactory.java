@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studentapp.model.AppDatabase;
 import com.example.studentapp.viewmodels.AddStudentViewModel;
+import com.example.studentapp.viewmodels.EditStudentViewModel;
+import com.example.studentapp.viewmodels.StudentDetailsViewModel;
 import com.example.studentapp.viewmodels.StudentListViewModel;
 
 public class AppViewModelFactory implements ViewModelProvider.Factory {
@@ -22,6 +24,10 @@ public class AppViewModelFactory implements ViewModelProvider.Factory {
             return (T) new StudentListViewModel(DB);
         } else if (modelClass.equals(AddStudentViewModel.class)){
             return (T) new AddStudentViewModel(DB);
+        } else if (modelClass.equals(StudentDetailsViewModel.class)) {
+            return (T) new StudentDetailsViewModel(DB);
+        }else if (modelClass.equals(EditStudentViewModel.class)) {
+            return (T) new EditStudentViewModel(DB);
         }
         return null;
     }

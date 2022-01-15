@@ -9,7 +9,7 @@
         android:id="@+id/studentListRvFragment"
         android:name="com.example.studentapp.StudentListRvFragment"
         android:label="fragment_student_list"
-        tools:layout="@layout/fragment_student_list" >
+        tools:layout="@layout/fragment_student_list">
         <action
             android:id="@+id/action_studentListRvFragment_to_newStudentFragment"
             app:destination="@id/newStudentFragment" />
@@ -26,10 +26,10 @@
         android:id="@+id/studentDetailsFragment"
         android:name="com.example.studentapp.StudentDetailsFragment"
         android:label="fragment_student_details"
-        tools:layout="@layout/fragment_student_details" >
+        tools:layout="@layout/fragment_student_details">
         <argument
-            android:name="studentIndex"
-            app:argType="integer" />
+            android:name="studentId"
+            app:argType="string" />
         <action
             android:id="@+id/action_studentDetailsFragment_to_studentEditFragment"
             app:destination="@id/studentEditFragment" />
@@ -38,9 +38,12 @@
         android:id="@+id/studentEditFragment"
         android:name="com.example.studentapp.StudentEditFragment"
         android:label="fragment_student_edit"
-        tools:layout="@layout/fragment_student_edit" >
+        tools:layout="@layout/fragment_student_edit">
         <argument
             android:name="studentIndex"
-            app:argType="integer" />
-    </fragment><action android:id="@+id/action_global_studentListRvFragment" app:destination="@id/studentListRvFragment"/>
+            app:argType="string" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_studentListRvFragment"
+        app:destination="@id/studentListRvFragment" />
 </navigation>
