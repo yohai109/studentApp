@@ -20,7 +20,6 @@ import java.util.Collections;
 
 public class StudentListRvFragment extends Fragment {
 
-    //    List<Student> data = Collections.emptyList();
     private StudentListViewModel viewModel;
     private RecyclerView list;
     private MyAdapter adapter;
@@ -44,7 +43,6 @@ public class StudentListRvFragment extends Fragment {
                 adapter.setData(Collections.emptyList());
             }
         });
-
 
         initList(view);
 
