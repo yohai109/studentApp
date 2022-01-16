@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -68,7 +69,10 @@ public class StudentListRvFragment extends Fragment {
         adapter.setCheckboxSelectedListener((student, isFlag) -> {
             viewModel.updateFlag(student, isFlag);
         });
+
+        SwipeRefreshLayout refrash = view.findViewById(R.id.swipeRefreshLayout);
+        refrash.setOnRefreshListener(() -> {
+            viewModel.refrash();
+        });
     }
-
-
 }
