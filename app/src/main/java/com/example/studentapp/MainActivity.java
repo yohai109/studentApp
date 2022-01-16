@@ -28,5 +28,4 @@ public class MainActivity extends AppCompatActivity {
                 ((StudentApplication) getApplication()).getFactory()
         ).get(StudentListViewModel.class);
     }
-
 }
