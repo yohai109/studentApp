@@ -26,10 +26,18 @@ public class FirebaseDao {
     public void refresh(StudentListViewModel.OnRefreshFinished callback) {
         db.collection(COLLECTION_NAME)
                 .get()
-                .addOnSuccessListener(command -> {
+                .addOnCompleteListener(command -> {
                     ArrayList<Student> students = new ArrayList<>();
-                    for (DocumentSnapshot doc : command.getDocuments()) {
-                        students.add(doc.toObject(Student.class));
+                    for (DocumentSnapshot doc : command.getResult()) {
+                        students.add(
+                                new Student(
+                                        (String) doc.get("name"),
+                                        (String) doc.get("id"),
+                                        (String) doc.get("address"),
+                                        (String) doc.get("phone"),
+                                        (Boolean) doc.get("flag")
+                                )
+                        );
                     }
                     callback.onRefreshFinished(students);
                 });

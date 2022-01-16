@@ -72,7 +72,7 @@ public class StudentListRvFragment extends Fragment {
 
         SwipeRefreshLayout refrash = view.findViewById(R.id.swipeRefreshLayout);
         refrash.setOnRefreshListener(() -> {
-            viewModel.refrash();
+            viewModel.refresh(() -> refrash.setRefreshing(false));
         });
     }
 }

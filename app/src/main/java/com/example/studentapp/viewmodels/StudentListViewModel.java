@@ -1,5 +1,9 @@
 package com.example.studentapp.viewmodels;
 
+import android.os.Handler;
+import android.os.Looper;
+
+import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -16,6 +20,7 @@ public class StudentListViewModel extends ViewModel {
     private final StudentDao dao;
     private final FirebaseDao firebaseDao;
     Executor executor = Executors.newFixedThreadPool(2);
+    Handler mainThread = HandlerCompat.createAsync(Looper.getMainLooper());
 
     public StudentListViewModel(AppDatabase db) {
         this.dao = db.studentDao();
@@ -26,8 +31,11 @@ public class StudentListViewModel extends ViewModel {
         return dao.getAll();
     }
 
-    public void refrash() {
-        firebaseDao.refresh(result -> executor.execute(() -> dao.insertAll(result.toArray(new Student[0]))));
+    public void refresh(onRefreshComplete onRefreshComplete) {
+        executor.execute(() -> firebaseDao.refresh(result -> executor.execute(() -> {
+            dao.insertAll(result.toArray(new Student[0]));
+            mainThread.post(onRefreshComplete::onComplete);
+        })));
     }
 
     public void updateFlag(Student student, Boolean isFlag) {
@@ -38,7 +46,10 @@ public class StudentListViewModel extends ViewModel {
         });
     }
 
-    public interface OnRefreshFinished{
+    public interface OnRefreshFinished {
         void onRefreshFinished(List<Student> result);
+    }
+    public interface onRefreshComplete{
+        void onComplete();
     }
 }

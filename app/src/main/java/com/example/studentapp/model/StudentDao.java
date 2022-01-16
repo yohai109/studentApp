@@ -1,5 +1,7 @@
 package com.example.studentapp.model;
 
+import static androidx.room.OnConflictStrategy.REPLACE;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -32,7 +34,7 @@ public interface StudentDao {
                 boolean flag
     );
 
-    @Insert
+    @Insert(onConflict = REPLACE)
     void insertAll(Student... users);
 
     @Delete
